@@ -154,5 +154,21 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .font-display { font-family: var(--font-display); }
+  .text-balance { text-wrap: balance; }
+  .grain {
+    background-image: radial-gradient(oklch(0.5 0.16 38 / 0.04) 1px, transparent 1px);
+    background-size: 4px 4px;
   }
 }
