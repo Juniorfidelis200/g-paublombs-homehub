@@ -5,6 +5,7 @@ import doorsImg from "@/assets/doors.jpg";
 import marbleImg from "@/assets/marble.jpg";
 import bathroomImg from "@/assets/bathroom.jpg";
 import { Phone, MapPin, Clock, Truck, ShieldCheck, Sparkles, Star, ArrowRight } from "lucide-react";
+import { ChatWidget } from "@/components/ChatWidget";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -38,6 +39,7 @@ function Index() {
       <Visit />
       <CTA />
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
