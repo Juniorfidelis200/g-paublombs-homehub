@@ -4,8 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap');
-
 /*
  * Design system definition.
  *
@@ -61,41 +59,49 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-display: 'Fraunces', serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Cormorant Garamond', 'Alta', Georgia, serif;
+  --font-sans: 'Geist', system-ui, sans-serif;
   --color-clay: var(--clay);
   --color-clay-deep: var(--clay-deep);
   --color-cream: var(--cream);
   --color-ink: var(--ink);
   --color-gold: var(--gold);
+  --color-brand-light: var(--brand-light);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-navy: var(--brand-navy);
 }
 
 :root {
   --radius: 0.25rem;
-  --background: oklch(0.985 0.008 80);
-  --foreground: oklch(0.18 0.02 40);
-  --card: oklch(0.99 0.006 80);
-  --card-foreground: oklch(0.18 0.02 40);
-  --popover: oklch(0.99 0.006 80);
-  --popover-foreground: oklch(0.18 0.02 40);
-  --primary: oklch(0.5 0.16 38);
-  --primary-foreground: oklch(0.985 0.008 80);
-  --secondary: oklch(0.94 0.015 70);
-  --secondary-foreground: oklch(0.22 0.03 40);
-  --muted: oklch(0.94 0.015 70);
-  --muted-foreground: oklch(0.45 0.03 50);
-  --accent: oklch(0.72 0.13 65);
-  --accent-foreground: oklch(0.18 0.02 40);
+  /* Brand palette */
+  --brand-light: #D7DDF9;
+  --brand-blue: #406AB3;
+  --brand-navy: #1A0E64;
+  --background: #FFFFFF;
+  --foreground: #1A0E64;
+  --card: #FFFFFF;
+  --card-foreground: #1A0E64;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A0E64;
+  --primary: #406AB3;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F4F6FD;
+  --secondary-foreground: #1A0E64;
+  --muted: #F4F6FD;
+  --muted-foreground: #5B6480;
+  --accent: #D7DDF9;
+  --accent-foreground: #1A0E64;
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.88 0.018 70);
-  --input: oklch(0.88 0.018 70);
-  --ring: oklch(0.5 0.16 38);
-  --clay: oklch(0.5 0.16 38);
-  --clay-deep: oklch(0.32 0.11 35);
-  --cream: oklch(0.97 0.018 80);
-  --ink: oklch(0.18 0.02 40);
-  --gold: oklch(0.72 0.13 65);
+  --destructive-foreground: #FFFFFF;
+  --border: #E5E8F2;
+  --input: #E5E8F2;
+  --ring: #406AB3;
+  /* Legacy aliases mapped to brand */
+  --clay: #406AB3;
+  --clay-deep: #1A0E64;
+  --cream: #F8F9FD;
+  --ink: #1A0E64;
+  --gold: #D7DDF9;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -168,7 +174,7 @@
   .font-display { font-family: var(--font-display); }
   .text-balance { text-wrap: balance; }
   .grain {
-    background-image: radial-gradient(oklch(0.5 0.16 38 / 0.04) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
     background-size: 4px 4px;
   }
 }

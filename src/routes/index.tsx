@@ -6,6 +6,8 @@ import marbleImg from "@/assets/marble.jpg";
 import bathroomImg from "@/assets/bathroom.jpg";
 import { Phone, MapPin, Clock, Truck, ShieldCheck, Sparkles, Star, ArrowRight } from "lucide-react";
 import { ChatWidget } from "@/components/ChatWidget";
+import logoPrimary from "@/assets/logo-primary.png.asset.json";
+import logoDark from "@/assets/logo-dark.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -48,17 +50,21 @@ function Nav() {
   return (
     <header className="absolute top-0 left-0 right-0 z-30">
       <div className="mx-auto max-w-7xl px-6 py-6 flex items-center justify-between text-cream">
-        <a href="#" className="flex items-center gap-2">
-          <span className="font-display text-2xl font-semibold tracking-tight">G‑Paublombs</span>
-          <span className="hidden sm:inline text-xs uppercase tracking-[0.2em] opacity-70 border-l border-cream/30 pl-2">& Co</span>
+        <a href="#" className="flex items-center p-2" aria-label="G-Paublo Homes Ltd">
+          {/* Full logo, minimum 100px wide per brand guidelines */}
+          <img
+            src={logoPrimary.url}
+            alt="G-Paublo Homes Ltd"
+            className="h-12 md:h-14 w-auto min-w-[120px] brightness-0 invert"
+          />
         </a>
         <nav className="hidden md:flex items-center gap-8 text-sm">
-          <a href="#categories" className="hover:text-gold transition">Products</a>
-          <a href="#why" className="hover:text-gold transition">Why us</a>
-          <a href="#gallery" className="hover:text-gold transition">Gallery</a>
-          <a href="#visit" className="hover:text-gold transition">Visit</a>
+          <a href="#categories" className="hover:text-brand-light transition">Products</a>
+          <a href="#why" className="hover:text-brand-light transition">Why us</a>
+          <a href="#gallery" className="hover:text-brand-light transition">Gallery</a>
+          <a href="#visit" className="hover:text-brand-light transition">Visit</a>
         </nav>
-        <a href={TEL} className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-cream text-ink text-sm font-medium hover:bg-gold transition">
+        <a href={TEL} className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-cream text-ink text-sm font-medium hover:bg-brand-light transition">
           <Phone size={14} /> {PHONE}
         </a>
       </div>
@@ -344,7 +350,11 @@ function Footer() {
     <footer className="bg-ink text-cream/70">
       <div className="mx-auto max-w-7xl px-6 py-16 grid md:grid-cols-3 gap-10">
         <div>
-          <div className="font-display text-2xl text-cream">G‑Paublombs & Co</div>
+          <img
+            src={logoPrimary.url}
+            alt="G-Paublo Homes Ltd"
+            className="h-14 w-auto min-w-[120px] brightness-0 invert"
+          />
           <p className="mt-4 text-sm leading-relaxed">
             Premium tiles, doors and building materials supplier serving homes and projects across Nigeria since inception.
           </p>
