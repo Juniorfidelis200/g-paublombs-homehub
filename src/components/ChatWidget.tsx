@@ -7,21 +7,21 @@ type Msg = { role: "user" | "assistant"; text: string };
 const WHATSAPP = "https://wa.me/2348032272932";
 
 const QUICK_REPLIES = [
-  { label: "Calculate Tile Needs 📐", reply: "I'd love to help! Please share the room dimensions (length × width in metres) and I'll estimate the tiles and boxes you'll need." },
-  { label: "Browse Interior Catalog 🏢", reply: "We carry Italian, Spanish and Nigerian tiles, marble, doors, and bathroom collections. Which space are you designing — living room, bathroom, kitchen, or exterior?" },
-  { label: "Talk to an Agent 💬", reply: `Of course — tap the button below to chat live with our team on WhatsApp: ${WHATSAPP}` },
+  { label: "View Current Projects 🏗️", reply: "We currently have three active developments: Paublo Heights (Lekki Phase 1), Legacy Court Townhouses (Orile Iganmu) and Paublo Plaza mixed-use. Which would you like more details on?" },
+  { label: "Invest with G-Paublo 📈", reply: "Wonderful — we offer project-backed equity and debt structures with quarterly reporting. Share your name and email and our investor relations team will send the pack." },
+  { label: "Book a Site Tour 🗝️", reply: `Of course — tap the button below to message our sales team on WhatsApp and pick a time: ${WHATSAPP}` },
 ];
 
-const INTRO = "Hi, I'm your G.paublo Showroom Assistant 👋 How can I help you find the perfect materials today?";
+const INTRO = "Welcome home 👋 I'm your G-Paublo Homes assistant. Are you exploring a residence to buy, or an investment opportunity?";
 
 function smartReply(input: string): string {
   const t = input.toLowerCase();
-  if (/(price|cost|how much|quote)/.test(t)) return "Prices vary by collection and quantity. Share the tile type and square metres needed and I'll get you a quote within minutes.";
-  if (/(deliver|shipping|location|where)/.test(t)) return "We deliver nationwide across Nigeria from our Orile Iganmu showroom in Lagos. Delivery time depends on your state.";
-  if (/(open|hour|time)/.test(t)) return "We're open Monday to Saturday, 8:00 am – 6:00 pm.";
-  if (/(install|fit|fix)/.test(t)) return "Yes — we offer end-to-end installation and structuring support alongside supply.";
-  if (/(tile|marble|porcelain)/.test(t)) return "Great choice! We stock polished porcelain, large-format marble looks, mosaics and Nigerian patterns. Want me to send catalogue images on WhatsApp?";
-  if (/(door)/.test(t)) return "We carry interior, security and decorative door systems. What style are you after?";
+  if (/(price|cost|how much|payment|plan)/.test(t)) return "Unit prices and flexible payment plans vary by project. Share which development you're interested in and I'll connect you with our sales team.";
+  if (/(invest|return|roi|partner)/.test(t)) return "We offer project-backed investment structures with quarterly reporting, site visits, and exit aligned to handover. Tap 'Invest with G-Paublo' to request the pack.";
+  if (/(location|where|address|office)/.test(t)) return "Our head office is at Block K Shop 40, STI Market, Orile Iganmu, Lagos. We develop across Lagos — Lekki, Mainland and more.";
+  if (/(open|hour|time)/.test(t)) return "Our office is open Monday to Saturday, 8:00 am – 6:00 pm. Site tours are by appointment.";
+  if (/(tour|visit|inspect|site)/.test(t)) return "Happy to arrange a site tour. Which project — Paublo Heights, Legacy Court, or Paublo Plaza?";
+  if (/(project|building|develop|apartment|house|home)/.test(t)) return "Our active projects are Paublo Heights (apartments, Lekki Phase 1), Legacy Court (townhouses, Orile Iganmu) and Paublo Plaza (mixed-use). Which appeals most?";
   return "Thanks for your message! For the fastest reply our team is on WhatsApp — or tell me a bit more and I'll guide you.";
 }
 
@@ -75,11 +75,11 @@ export function ChatWidget() {
         {/* Header */}
         <div className="bg-clay text-cream px-4 py-3 flex items-center gap-3">
           <div className="relative">
-            <img src={avatar} alt="G.paublo Showroom Assistant" className="h-10 w-10 rounded-full object-cover bg-cream" />
+            <img src={avatar} alt="G-Paublo Homes Assistant" className="h-10 w-10 rounded-full object-cover bg-cream" />
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-clay" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="font-display text-base leading-tight">G.paublo Showroom Assistant</div>
+            <div className="font-display text-base leading-tight">G-Paublo Homes Assistant</div>
             <div className="text-xs text-cream/70">Online · Replies instantly</div>
           </div>
           <button onClick={() => setOpen(false)} aria-label="Close" className="text-cream/80 hover:text-cream">
