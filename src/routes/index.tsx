@@ -7,6 +7,14 @@ import blueprintImg from "@/assets/blueprint.jpg";
 import { Phone, MapPin, Clock, Building2, KeyRound, TrendingUp, ShieldCheck, ArrowRight, Instagram, ArrowUpRight, Award, Gem, HardHat, HeartHandshake, Quote, Star } from "lucide-react";
 import { ChatWidget } from "@/components/ChatWidget";
 import logoPrimary from "@/assets/logo-primary.png.asset.json";
+import doorLuxuryBlack from "@/assets/door-luxury-black.jpg.asset.json";
+import doorSecurityGrey from "@/assets/door-security-grey.jpg.asset.json";
+import doorClassicalWhite from "@/assets/door-classical-white.jpg.asset.json";
+import doorInteriorGlass from "@/assets/door-interior-glass.jpg.asset.json";
+import doorWoodModern from "@/assets/door-wood-modern.jpg.asset.json";
+import doorClassicBrown from "@/assets/door-classic-brown.jpg.asset.json";
+import doorAluminumGlass from "@/assets/door-aluminum-glass.jpg.asset.json";
+import doorEntranceArc from "@/assets/door-entrance-arc.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,6 +44,7 @@ function Index() {
       <Stats />
       <About />
       <Projects />
+      <Catalog />
       <Process />
       <WhyChoose />
       <Invest />
