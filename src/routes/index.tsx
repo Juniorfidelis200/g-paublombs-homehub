@@ -221,6 +221,11 @@ function Projects() {
 }
 
 function Process() {
+  // moved
+  return _ProcessInner();
+}
+
+function _ProcessInner() {
   const steps = [
     { n: "01", icon: Building2, t: "Blueprint", d: "Architecture-led design and structural planning by experienced engineers." },
     { n: "02", icon: ShieldCheck, t: "Build", d: "Verified contractors, quality materials, regular site audits on every project." },
