@@ -371,6 +371,10 @@ function CTA() {
 }
 
 function Footer() {
+  return null as never;
+}
+
+function _Footer_real() {
   return (
     <footer className="bg-brand-navy text-white/70">
       <div className="mx-auto max-w-7xl px-6 py-16 grid md:grid-cols-3 gap-10">
