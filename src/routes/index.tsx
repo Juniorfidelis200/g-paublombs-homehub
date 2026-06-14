@@ -4,7 +4,7 @@ import interiorImg from "@/assets/project-interior.jpg";
 import townhouseImg from "@/assets/project-townhouse.jpg";
 import mixedUseImg from "@/assets/project-mixeduse.jpg";
 import blueprintImg from "@/assets/blueprint.jpg";
-import { Phone, MapPin, Clock, Building2, KeyRound, TrendingUp, ShieldCheck, ArrowRight, Instagram, ArrowUpRight } from "lucide-react";
+import { Phone, MapPin, Clock, Building2, KeyRound, TrendingUp, ShieldCheck, ArrowRight, Instagram, ArrowUpRight, Award, Gem, HardHat, HeartHandshake, Quote, Star } from "lucide-react";
 import { ChatWidget } from "@/components/ChatWidget";
 import logoPrimary from "@/assets/logo-primary.png.asset.json";
 
@@ -37,7 +37,9 @@ function Index() {
       <About />
       <Projects />
       <Process />
+      <WhyChoose />
       <Invest />
+      <Testimonials />
       <Visit />
       <CTA />
       <Footer />
@@ -84,7 +86,10 @@ function Hero() {
           <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-medium text-white leading-[0.95] text-balance">
             Crafted Living, <em className="text-brand-light italic font-normal">Built</em> for Legacy.
           </h1>
-          <p className="mt-8 text-lg md:text-xl text-white/80 max-w-xl leading-relaxed">
+          <p className="mt-6 text-lg md:text-xl text-white/85 max-w-xl leading-relaxed font-display italic">
+            Building Timeless Spaces. Creating Lasting Value.
+          </p>
+          <p className="mt-4 text-base md:text-lg text-white/70 max-w-xl leading-relaxed">
             From blueprint to key handover, we deliver homes built to inspire, endure, and appreciate.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
