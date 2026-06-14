@@ -370,7 +370,6 @@ function CTA() {
   );
 }
 
-function Footer() {
 function WhyChoose() {
   const items = [
     { icon: Award, t: "Architectural Integrity", d: "Every line drawn with purpose. Premium materials and refined finishes that hold their value." },
