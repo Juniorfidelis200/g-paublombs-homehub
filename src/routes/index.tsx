@@ -221,11 +221,69 @@ function Projects() {
 }
 
 function Process() {
-  // moved
-  return _ProcessInner();
+function Catalog() {
+  const products = [
+    { img: doorLuxuryBlack.url, name: "Imperial Black Series", cat: "Luxury Entrance · Security", tag: "Best seller" },
+    { img: doorSecurityGrey.url, name: "Sentinel Twin Panel", cat: "Heavy-Duty Security Door", tag: "In stock" },
+    { img: doorClassicalWhite.url, name: "Heritage White & Gold", cat: "Classical Entrance Suite", tag: "Bespoke" },
+    { img: doorInteriorGlass.url, name: "Aurora Bath & Interior", cat: "Aluminum + Frosted Glass", tag: "Interior" },
+    { img: doorWoodModern.url, name: "Walnut Slim-Frame", cat: "Modern Entrance · Walnut Veneer", tag: "New" },
+    { img: doorClassicBrown.url, name: "Mahogany Double Wing", cat: "Classic Luxury Entrance", tag: "Available" },
+    { img: doorAluminumGlass.url, name: "Pioneer Aluminum Glass", cat: "Tempered Glass · 2050×750mm", tag: "In stock" },
+    { img: doorEntranceArc.url, name: "Arc Signature Entrance", cat: "Designer Entrance Door", tag: "Featured" },
+  ];
+  return (
+    <section id="catalog" className="bg-background py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="flex items-end justify-between flex-wrap gap-6 mb-14">
+          <div className="max-w-2xl">
+            <span className="text-xs uppercase tracking-[0.3em] text-brand-blue">Door collection & architectural finishes</span>
+            <h2 className="font-display text-4xl md:text-5xl mt-3 text-balance text-brand-navy">
+              Security doors, entrance suites & <em className="italic text-brand-blue">finishing</em> products.
+            </h2>
+            <p className="text-muted-foreground mt-5 leading-relaxed">
+              Beyond developments, we supply premium security and entrance doors, aluminum & glass systems, and architectural finishing products — sourced and installed across Lagos and nationwide.
+            </p>
+          </div>
+          <a href={WHATSAPP} className="text-sm font-medium text-brand-blue hover:text-brand-navy inline-flex items-center gap-2">
+            Request full catalog & price list <ArrowRight size={14} />
+          </a>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {products.map((p) => (
+            <a key={p.name} href={WHATSAPP} className="group bg-secondary rounded-sm overflow-hidden border border-border hover:border-brand-blue/40 hover:shadow-xl hover:shadow-brand-navy/5 transition flex flex-col">
+              <div className="relative aspect-[3/4] overflow-hidden bg-brand-navy/5">
+                <img src={p.img} alt={p.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+                <span className="absolute top-3 left-3 text-[10px] uppercase tracking-[0.18em] bg-brand-navy text-white px-2.5 py-1 rounded-full">{p.tag}</span>
+              </div>
+              <div className="p-5 flex-1 flex flex-col">
+                <div className="text-[11px] uppercase tracking-[0.2em] text-brand-blue">{p.cat}</div>
+                <h3 className="font-display text-lg mt-1.5 text-brand-navy leading-tight">{p.name}</h3>
+                <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-brand-blue group-hover:gap-2.5 transition-all">
+                  Enquire & price <ArrowRight size={12} />
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+        <div className="mt-14 grid sm:grid-cols-3 gap-6 text-sm">
+          {[
+            { t: "Nationwide delivery", d: "Lagos pickup or shipped to your site anywhere in Nigeria." },
+            { t: "Custom sizes & finishes", d: "Bespoke entrance suites to architectural specification." },
+            { t: "Professional installation", d: "Trained crew, on-site fitting, snag-free finish guarantee." },
+          ].map((f) => (
+            <div key={f.t} className="border-l-2 border-brand-blue pl-5">
+              <div className="font-display text-lg text-brand-navy">{f.t}</div>
+              <p className="text-muted-foreground mt-1.5 leading-relaxed">{f.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }
 
-function _ProcessInner() {
+function Process() {
   const steps = [
     { n: "01", icon: Building2, t: "Blueprint", d: "Architecture-led design and structural planning by experienced engineers." },
     { n: "02", icon: ShieldCheck, t: "Build", d: "Verified contractors, quality materials, regular site audits on every project." },
