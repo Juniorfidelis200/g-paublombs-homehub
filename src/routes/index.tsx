@@ -220,7 +220,6 @@ function Projects() {
   );
 }
 
-function Process() {
 function Catalog() {
   const products = [
     { img: doorLuxuryBlack.url, name: "Imperial Black Series", cat: "Luxury Entrance · Security", tag: "Best seller" },
