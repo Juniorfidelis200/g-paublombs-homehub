@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import iconAsset from "@/assets/logo-icon.png.asset.json";
+import { Toaster } from "sonner";
 
 function NotFoundComponent() {
   return (
@@ -128,6 +129,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
 }
