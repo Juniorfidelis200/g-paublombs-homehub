@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/hero-building.jpg";
 import interiorImg from "@/assets/project-interior.jpg";
 import townhouseImg from "@/assets/project-townhouse.jpg";
@@ -70,6 +70,7 @@ function Nav() {
         </a>
         <nav className="hidden md:flex items-center gap-8 text-sm">
           <a href="#projects" className="hover:text-brand-light transition">Current Projects</a>
+          <Link to="/products" className="hover:text-brand-light transition">Products</Link>
           <a href="#about" className="hover:text-brand-light transition">About Us</a>
           <a href="#invest" className="hover:text-brand-light transition">Invest</a>
           <a href="#visit" className="hover:text-brand-light transition">Contact</a>
@@ -244,13 +245,13 @@ function Catalog() {
               Beyond developments, we supply premium security and entrance doors, aluminum & glass systems, and architectural finishing products — sourced and installed across Lagos and nationwide.
             </p>
           </div>
-          <a href={WHATSAPP} className="text-sm font-medium text-brand-blue hover:text-brand-navy inline-flex items-center gap-2">
-            Request full catalog & price list <ArrowRight size={14} />
-          </a>
+          <Link to="/products" className="text-sm font-medium text-brand-blue hover:text-brand-navy inline-flex items-center gap-2">
+            Browse full product catalog <ArrowRight size={14} />
+          </Link>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {products.map((p) => (
-            <a key={p.name} href={WHATSAPP} className="group bg-secondary rounded-sm overflow-hidden border border-border hover:border-brand-blue/40 hover:shadow-xl hover:shadow-brand-navy/5 transition flex flex-col">
+            <Link key={p.name} to="/products" className="group bg-secondary rounded-sm overflow-hidden border border-border hover:border-brand-blue/40 hover:shadow-xl hover:shadow-brand-navy/5 transition flex flex-col">
               <div className="relative aspect-[3/4] overflow-hidden bg-brand-navy/5">
                 <img src={p.img} alt={p.name} loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700" />
                 <span className="absolute top-3 left-3 text-[10px] uppercase tracking-[0.18em] bg-brand-navy text-white px-2.5 py-1 rounded-full">{p.tag}</span>
@@ -259,10 +260,10 @@ function Catalog() {
                 <div className="text-[11px] uppercase tracking-[0.2em] text-brand-blue">{p.cat}</div>
                 <h3 className="font-display text-lg mt-1.5 text-brand-navy leading-tight">{p.name}</h3>
                 <div className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-brand-blue group-hover:gap-2.5 transition-all">
-                  Enquire & price <ArrowRight size={12} />
+                  View in catalog <ArrowRight size={12} />
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
         <div className="mt-14 grid sm:grid-cols-3 gap-6 text-sm">
