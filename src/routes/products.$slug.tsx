@@ -5,14 +5,12 @@ import {
   fetchProductBySlug,
   fetchProductImages,
   fetchProducts,
-  priceLabel,
   whatsappQuoteUrl,
-  formatNGN,
 } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { MessageCircle, FileText, ArrowLeft, ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
+import { MessageCircle, FileText, ArrowLeft, ChevronLeft, ChevronRight, ImageOff, CalendarClock } from "lucide-react";
 import { ChatWidget } from "@/components/ChatWidget";
 import logoPrimary from "@/assets/logo-primary.png.asset.json";
 
@@ -109,10 +107,6 @@ function ProductDetail() {
           <h1 className="font-display text-4xl md:text-5xl mt-2 text-brand-navy text-balance">{p.name}</h1>
 
           <div className="mt-6 flex items-center gap-3 flex-wrap">
-            <div className="text-2xl font-display text-brand-navy">{priceLabel(p)}</div>
-            {p.discount_price != null && p.price != null && (
-              <span className="text-sm text-muted-foreground line-through">{formatNGN(p.price)}</span>
-            )}
             <StockBadge status={p.stock_status} />
             {p.featured && <Badge className="bg-brand-light text-brand-navy border-0">Featured</Badge>}
           </div>
@@ -174,11 +168,14 @@ function ProductDetail() {
           )}
 
           <div className="mt-10 flex flex-wrap gap-3">
-            <a href={wa} target="_blank" rel="noopener" className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebd5b] text-white px-6 py-3.5 rounded-full font-medium transition">
-              <MessageCircle size={18} /> WhatsApp inquiry
-            </a>
             <a href={wa} target="_blank" rel="noopener" className="inline-flex items-center gap-2 bg-brand-navy hover:bg-brand-blue text-white px-6 py-3.5 rounded-full font-medium transition">
-              <FileText size={16} /> Request a quote
+              <FileText size={16} /> Request a Quote
+            </a>
+            <a href={wa} target="_blank" rel="noopener" className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebd5b] text-white px-6 py-3.5 rounded-full font-medium transition">
+              <MessageCircle size={18} /> WhatsApp Inquiry
+            </a>
+            <a href={wa} target="_blank" rel="noopener" className="inline-flex items-center gap-2 border border-brand-navy/20 hover:border-brand-blue text-brand-navy px-6 py-3.5 rounded-full font-medium transition">
+              <CalendarClock size={16} /> Speak to Consultant
             </a>
           </div>
         </div>
@@ -198,7 +195,7 @@ function ProductDetail() {
                   <div className="p-4">
                     <div className="text-[11px] uppercase tracking-widest text-brand-blue">{r.category}</div>
                     <div className="font-display text-lg mt-1 text-brand-navy">{r.name}</div>
-                    <div className="mt-2 text-sm">{priceLabel(r)}</div>
+                    <div className="mt-2 text-xs text-muted-foreground">Request Quote</div>
                   </div>
                 </Link>
               ))}
