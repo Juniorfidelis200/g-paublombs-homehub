@@ -2,12 +2,11 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const PRODUCT_CATEGORIES = [
   "Security Doors",
-  "Luxury Doors",
-  "Wooden Doors",
-  "Modern Doors",
-  "Contemporary Doors",
+  "Luxury Entrance Doors",
   "Smart Doors",
-  "Premium Entrance Doors",
+  "Fire-Resistant Doors",
+  "Interior Doors",
+  "Customized Doors",
 ] as const;
 
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
@@ -64,7 +63,13 @@ export function formatNGN(n: number | null | undefined) {
 }
 
 export function priceLabel(p: Pick<Product, "price" | "price_max" | "discount_price">) {
-  // Price intentionally hidden — all pricing on enquiry.
+  if (p.discount_price != null) {
+    return `${formatNGN(p.discount_price)}`;
+  }
+  if (p.price != null && p.price_max != null && p.price_max > p.price) {
+    return `${formatNGN(p.price)} – ${formatNGN(p.price_max)}`;
+  }
+  if (p.price != null) return `From ${formatNGN(p.price)}`;
   return "Request quote";
 }
 
@@ -72,7 +77,7 @@ export const WHATSAPP_BASE = "https://wa.me/2348032272932";
 
 export function whatsappQuoteUrl(product: Pick<Product, "name">) {
   const text = encodeURIComponent(
-    `Hello G-Paublo Homes, I'd like to make an inquiry about the "${product.name}". Please share availability, sizes and lead time including delivery & installation.`,
+    `Hello G-Paublo Homes, I'd like a quote on the "${product.name}". Please share availability, sizes and total price including delivery & installation.`,
   );
   return `${WHATSAPP_BASE}?text=${text}`;
 }

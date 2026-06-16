@@ -12,7 +12,7 @@ const QUICK_REPLIES = [
   { label: "Book a Site Tour 🗝️", reply: `Of course — tap the button below to message our sales team on WhatsApp and pick a time: ${WHATSAPP}` },
 ];
 
-const INTRO = "Welcome 👋 I'm Paublo Concierge — your G-Paublo Homes guide. Looking for the perfect door, an investment opportunity, or to book a private consultation?";
+const INTRO = "Welcome home 👋 I'm your G-Paublo Homes assistant. Are you exploring a residence to buy, or an investment opportunity?";
 
 function smartReply(input: string): string {
   const t = input.toLowerCase();
@@ -79,7 +79,7 @@ export function ChatWidget() {
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-clay" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="font-display text-base leading-tight">Paublo Concierge</div>
+            <div className="font-display text-base leading-tight">G-Paublo Homes Assistant</div>
             <div className="text-xs text-cream/70">Online · Replies instantly</div>
           </div>
           <button onClick={() => setOpen(false)} aria-label="Close" className="text-cream/80 hover:text-cream">

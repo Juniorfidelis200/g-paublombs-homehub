@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Search, MessageCircle, ArrowRight, ImageOff } from "lucide-react";
+import { Search, MessageCircle, ArrowRight, Filter, ImageOff } from "lucide-react";
 import { ChatWidget } from "@/components/ChatWidget";
 import logoPrimary from "@/assets/logo-primary.png.asset.json";
 
@@ -38,6 +38,7 @@ function ProductsPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string>("all");
   const [stock, setStock] = useState<string>("all");
+  const [maxPrice, setMaxPrice] = useState<number | "">("");
 
   const imagesByProduct = useMemo(() => {
     const m = new Map<string, ProductImage[]>();
@@ -55,11 +56,12 @@ function ProductsPage() {
     return list.filter((p) => {
       if (category !== "all" && p.category !== category) return false;
       if (stock !== "all" && p.stock_status !== stock) return false;
+      if (maxPrice !== "" && p.price != null && p.price > Number(maxPrice)) return false;
       if (!q) return true;
       const hay = [p.name, p.category, p.description ?? "", ...(p.features ?? [])].join(" ").toLowerCase();
       return hay.includes(q);
     });
-  }, [productsQ.data, search, category, stock]);
+  }, [productsQ.data, search, category, stock, maxPrice]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -106,14 +108,17 @@ function ProductsPage() {
                 </FilterPill>
               ))}
             </FilterGroup>
-            <a
-              href="https://wa.me/2348032272932"
-              className="block rounded-lg border border-brand-blue/20 bg-brand-light/30 p-4 hover:border-brand-blue transition"
-            >
-              <div className="text-xs uppercase tracking-widest text-brand-blue">Need help?</div>
-              <div className="font-display text-base text-brand-navy mt-1">Speak to a consultant</div>
-              <div className="text-xs text-muted-foreground mt-1">Personal advice on door selection.</div>
-            </a>
+            <div>
+              <label className="text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-2"><Filter size={12} /> Max price (₦)</label>
+              <Input
+                type="number"
+                inputMode="numeric"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value === "" ? "" : Number(e.target.value))}
+                placeholder="e.g. 800000"
+                className="mt-2"
+              />
+            </div>
           </aside>
 
           <div>
@@ -224,7 +229,7 @@ function ProductCard({ product, images }: { product: Product; images: ProductIma
         <div className="text-[11px] uppercase tracking-widest text-brand-blue">{product.category}</div>
         <h3 className="font-display text-xl mt-1 text-brand-navy">{product.name}</h3>
         <div className="mt-3 flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">Request Quote</span>
+          <span className="text-sm font-medium text-foreground">{priceLabel(product)}</span>
           <span className="text-xs text-brand-blue inline-flex items-center gap-1 group-hover:gap-2 transition-all">
             View <ArrowRight size={12} />
           </span>
