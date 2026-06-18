@@ -3,13 +3,35 @@ import { supabase } from "@/integrations/supabase/client";
 export const PRODUCT_CATEGORIES = [
   "Security Doors",
   "Luxury Entrance Doors",
+  "Turkish Doors",
   "Smart Doors",
-  "Fire-Resistant Doors",
+  "Fireproof Doors",
   "Interior Doors",
+  "Wooden Doors",
   "Customized Doors",
 ] as const;
 
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
+
+export type Category = {
+  id: string;
+  name: string;
+  slug: string;
+  sort_order: number;
+};
+
+export async function fetchCategories() {
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .order("sort_order", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as Category[];
+}
+
+export function categorySlug(name: string) {
+  return slugify(name);
+}
 
 export const STOCK_OPTIONS = [
   { value: "in_stock", label: "In Stock" },

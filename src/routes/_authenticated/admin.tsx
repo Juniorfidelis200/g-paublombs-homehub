@@ -60,6 +60,7 @@ function AdminPage() {
 
   const [editing, setEditing] = useState<Product | null>(null);
   const [creating, setCreating] = useState(false);
+  const [bulkOpen, setBulkOpen] = useState(false);
 
   async function handleSignOut() {
     await qc.cancelQueries();
@@ -173,6 +174,9 @@ function AdminPage() {
           <Button onClick={() => setCreating(true)} className="bg-brand-navy hover:bg-brand-blue text-white">
             <Plus size={16} className="mr-1.5" /> Add product
           </Button>
+          <Button variant="outline" onClick={() => setBulkOpen(true)} className="border-brand-navy text-brand-navy hover:bg-brand-light">
+            <Upload size={16} className="mr-1.5" /> Bulk image upload
+          </Button>
         </div>
 
         {productsQ.isLoading ? (
@@ -232,7 +236,158 @@ function AdminPage() {
           onClose={() => { setEditing(null); setCreating(false); }}
         />
       )}
+      {bulkOpen && <BulkUploadDialog onClose={() => setBulkOpen(false)} />}
     </div>
+  );
+}
+
+function BulkUploadDialog({ onClose }: { onClose: () => void }) {
+  const qc = useQueryClient();
+  const [category, setCategory] = useState<string>(PRODUCT_CATEGORIES[0]);
+  const [files, setFiles] = useState<File[]>([]);
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+
+  function addFiles(list: FileList | File[]) {
+    const arr = Array.from(list).filter((f) => f.type.startsWith("image/"));
+    setFiles((prev) => [...prev, ...arr]);
+  }
+
+  function titleFromFilename(name: string) {
+    const base = name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").trim();
+    return base.replace(/\s+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) || "Untitled Door";
+  }
+
+  async function handleRun() {
+    if (files.length === 0) return;
+    setProgress({ done: 0, total: files.length });
+    let done = 0;
+    for (const file of files) {
+      try {
+        const name = titleFromFilename(file.name);
+        let slug = slugify(name);
+        // ensure unique slug
+        const { data: existing } = await supabase.from("products").select("id").eq("slug", slug).maybeSingle();
+        if (existing) slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
+
+        const { data: product, error: pErr } = await supabase
+          .from("products")
+          .insert({ name, slug, category })
+          .select("id")
+          .single();
+        if (pErr) throw pErr;
+
+        const ext = file.name.split(".").pop() ?? "jpg";
+        const path = `${product.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const { error: upErr } = await supabase.storage.from("product-images").upload(path, file, {
+          cacheControl: "31536000",
+          upsert: false,
+        });
+        if (upErr) throw upErr;
+        const { data: pub } = supabase.storage.from("product-images").getPublicUrl(path);
+        const { error: imgErr } = await supabase.from("product_images").insert({
+          product_id: product.id,
+          image_url: pub.publicUrl,
+          sort_order: 0,
+        });
+        if (imgErr) throw imgErr;
+      } catch (e: any) {
+        toast.error(`${file.name}: ${e.message ?? "failed"}`);
+      } finally {
+        done += 1;
+        setProgress({ done, total: files.length });
+      }
+    }
+    toast.success(`${done} product${done === 1 ? "" : "s"} created`);
+    qc.invalidateQueries({ queryKey: ["products"] });
+    qc.invalidateQueries({ queryKey: ["product_images"] });
+    setFiles([]);
+    setProgress(null);
+    onClose();
+  }
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle className="font-display text-2xl text-brand-navy">Bulk image upload</DialogTitle>
+        </DialogHeader>
+        <p className="text-sm text-muted-foreground -mt-2">
+          Drop multiple door images — one product will be created per image, using the filename as the product name. You can edit details afterwards.
+        </p>
+
+        <div className="space-y-1.5 mt-4">
+          <Label>Default category for these uploads</Label>
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {PRODUCT_CATEGORIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <label
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={(e) => {
+            e.preventDefault(); setDragOver(false);
+            if (e.dataTransfer.files) addFiles(e.dataTransfer.files);
+          }}
+          className={
+            "mt-4 block border-2 border-dashed rounded-lg p-10 text-center cursor-pointer transition " +
+            (dragOver ? "border-brand-blue bg-brand-light/40" : "border-border hover:border-brand-blue/60")
+          }
+        >
+          <ImagePlus className="mx-auto text-brand-blue" size={28} />
+          <p className="text-sm text-brand-navy mt-3 font-medium">Drag & drop door images here</p>
+          <p className="text-xs text-muted-foreground mt-1">or click to browse — multiple files supported</p>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={(e) => { if (e.target.files) addFiles(e.target.files); e.target.value = ""; }}
+          />
+        </label>
+
+        {files.length > 0 && (
+          <div className="mt-4">
+            <div className="text-xs text-muted-foreground mb-2">{files.length} file{files.length === 1 ? "" : "s"} queued</div>
+            <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-48 overflow-y-auto">
+              {files.map((f, i) => (
+                <div key={i} className="relative aspect-square rounded overflow-hidden bg-secondary group">
+                  <img src={URL.createObjectURL(f)} alt="" className="w-full h-full object-cover" />
+                  <button
+                    className="absolute top-1 right-1 bg-black/60 hover:bg-destructive text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+                    onClick={() => setFiles((prev) => prev.filter((_, idx) => idx !== i))}
+                  >
+                    <X size={10} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {progress && (
+          <div className="mt-4 text-sm text-muted-foreground">
+            Uploading {progress.done} / {progress.total}…
+          </div>
+        )}
+
+        <DialogFooter className="mt-6">
+          <Button variant="outline" onClick={onClose} disabled={!!progress}>Cancel</Button>
+          <Button
+            className="bg-brand-navy hover:bg-brand-blue text-white"
+            onClick={handleRun}
+            disabled={files.length === 0 || !!progress}
+          >
+            {progress ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
+            Create {files.length || ""} product{files.length === 1 ? "" : "s"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

@@ -19,6 +19,9 @@ import { ChatWidget } from "@/components/ChatWidget";
 import logoPrimary from "@/assets/logo-primary.png.asset.json";
 
 export const Route = createFileRoute("/products")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    category: typeof s.category === "string" ? s.category : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Products — Security & Luxury Doors | G-Paublo Homes" },
@@ -32,11 +35,12 @@ export const Route = createFileRoute("/products")({
 });
 
 function ProductsPage() {
+  const urlSearch = Route.useSearch();
   const productsQ = useQuery({ queryKey: ["products"], queryFn: fetchProducts });
   const imagesQ = useQuery({ queryKey: ["product_images"], queryFn: fetchAllProductImages });
 
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<string>("all");
+  const [category, setCategory] = useState<string>(urlSearch.category ?? "all");
   const [stock, setStock] = useState<string>("all");
   const [maxPrice, setMaxPrice] = useState<number | "">("");
 
