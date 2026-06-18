@@ -35,12 +35,12 @@ export const Route = createFileRoute("/products")({
 });
 
 function ProductsPage() {
-  const search = Route.useSearch();
+  const urlSearch = Route.useSearch();
   const productsQ = useQuery({ queryKey: ["products"], queryFn: fetchProducts });
   const imagesQ = useQuery({ queryKey: ["product_images"], queryFn: fetchAllProductImages });
 
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<string>(search.category ?? "all");
+  const [category, setCategory] = useState<string>(urlSearch.category ?? "all");
   const [stock, setStock] = useState<string>("all");
   const [maxPrice, setMaxPrice] = useState<number | "">("");
 
