@@ -60,6 +60,7 @@ function AdminPage() {
 
   const [editing, setEditing] = useState<Product | null>(null);
   const [creating, setCreating] = useState(false);
+  const [bulkOpen, setBulkOpen] = useState(false);
 
   async function handleSignOut() {
     await qc.cancelQueries();
@@ -173,6 +174,9 @@ function AdminPage() {
           <Button onClick={() => setCreating(true)} className="bg-brand-navy hover:bg-brand-blue text-white">
             <Plus size={16} className="mr-1.5" /> Add product
           </Button>
+          <Button variant="outline" onClick={() => setBulkOpen(true)} className="border-brand-navy text-brand-navy hover:bg-brand-light">
+            <Upload size={16} className="mr-1.5" /> Bulk image upload
+          </Button>
         </div>
 
         {productsQ.isLoading ? (
@@ -232,6 +236,7 @@ function AdminPage() {
           onClose={() => { setEditing(null); setCreating(false); }}
         />
       )}
+      {bulkOpen && <BulkUploadDialog onClose={() => setBulkOpen(false)} />}
     </div>
   );
 }
