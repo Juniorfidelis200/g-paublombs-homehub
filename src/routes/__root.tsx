@@ -11,6 +11,8 @@ import {
 import appCss from "../styles.css?url";
 import iconAsset from "@/assets/logo-icon.png.asset.json";
 import { Toaster } from "sonner";
+import { useQuery } from "@tanstack/react-query";
+import { fetchSiteSettings } from "@/lib/products";
 
 function NotFoundComponent() {
   return (
@@ -127,9 +129,21 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ThemeApplier />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   );
+}
+
+function ThemeApplier() {
+  const { data } = useQuery({
+    queryKey: ["site_settings"],
+    queryFn: fetchSiteSettings,
+    staleTime: 60_000,
+  });
+  if (!data) return null;
+  const css = `:root{--brand-navy:${data.brand_navy};--brand-blue:${data.brand_blue};--brand-light:${data.brand_light};--foreground:${data.brand_navy};--card-foreground:${data.brand_navy};--popover-foreground:${data.brand_navy};--secondary-foreground:${data.brand_navy};--accent-foreground:${data.brand_navy};--primary:${data.brand_blue};--accent:${data.brand_light};--ring:${data.brand_blue};--clay:${data.brand_blue};--clay-deep:${data.brand_navy};--ink:${data.brand_navy};--gold:${data.brand_light};}`;
+  return <style dangerouslySetInnerHTML={{ __html: css }} />;
 }
