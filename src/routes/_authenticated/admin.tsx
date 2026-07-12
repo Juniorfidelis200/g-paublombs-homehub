@@ -55,7 +55,10 @@ function AdminPage() {
     },
   });
 
-  const productsQ = useQuery({ queryKey: ["products"], queryFn: fetchProducts });
+  const productsQ = useQuery({
+    queryKey: ["products", "admin"],
+    queryFn: () => fetchProducts({ includeUnpublished: true }),
+  });
   const imagesQ = useQuery({ queryKey: ["product_images"], queryFn: fetchAllProductImages });
 
   const [editing, setEditing] = useState<Product | null>(null);
