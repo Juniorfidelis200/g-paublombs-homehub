@@ -55,6 +55,7 @@ export type Product = {
   discount_price: number | null;
   stock_status: string;
   featured: boolean;
+  published: boolean;
   created_at: string;
   updated_at: string;
 };
@@ -104,10 +105,10 @@ export function whatsappQuoteUrl(product: Pick<Product, "name">) {
   return `${WHATSAPP_BASE}?text=${text}`;
 }
 
-export async function fetchProducts() {
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
+export async function fetchProducts(opts: { includeUnpublished?: boolean } = {}) {
+  let query = supabase.from("products").select("*");
+  if (!opts.includeUnpublished) query = query.eq("published", true);
+  const { data, error } = await query
     .order("featured", { ascending: false })
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -118,6 +119,7 @@ export async function fetchProductBySlug(slug: string) {
   const { data, error } = await supabase
     .from("products")
     .select("*")
+    .eq("published", true)
     .eq("slug", slug)
     .maybeSingle();
   if (error) throw error;
@@ -141,4 +143,28 @@ export async function fetchAllProductImages() {
     .order("sort_order", { ascending: true });
   if (error) throw error;
   return (data ?? []) as ProductImage[];
+}
+
+export type SiteSettings = {
+  id: string;
+  site_name: string;
+  tagline: string | null;
+  brand_navy: string;
+  brand_blue: string;
+  brand_light: string;
+};
+
+export async function fetchSiteSettings(): Promise<SiteSettings | null> {
+  const { data, error } = await supabase
+    .from("site_settings")
+    .select("id, site_name, tagline, brand_navy, brand_blue, brand_light")
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return (data ?? null) as SiteSettings | null;
+}
+
+export async function updateSiteSettings(id: string, patch: Partial<Omit<SiteSettings, "id">>) {
+  const { error } = await supabase.from("site_settings").update(patch).eq("id", id);
+  if (error) throw error;
 }
