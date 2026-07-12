@@ -83,6 +83,7 @@ export type Database = {
           name: string
           price: number | null
           price_max: number | null
+          published: boolean
           sizes: Json
           slug: string
           specifications: Json
@@ -101,6 +102,7 @@ export type Database = {
           name: string
           price?: number | null
           price_max?: number | null
+          published?: boolean
           sizes?: Json
           slug: string
           specifications?: Json
@@ -119,6 +121,7 @@ export type Database = {
           name?: string
           price?: number | null
           price_max?: number | null
+          published?: boolean
           sizes?: Json
           slug?: string
           specifications?: Json
@@ -145,6 +148,39 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          brand_blue: string
+          brand_light: string
+          brand_navy: string
+          id: string
+          singleton: boolean
+          site_name: string
+          tagline: string | null
+          updated_at: string
+        }
+        Insert: {
+          brand_blue?: string
+          brand_light?: string
+          brand_navy?: string
+          id?: string
+          singleton?: boolean
+          site_name?: string
+          tagline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          brand_blue?: string
+          brand_light?: string
+          brand_navy?: string
+          id?: string
+          singleton?: boolean
+          site_name?: string
+          tagline?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
