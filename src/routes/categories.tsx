@@ -19,7 +19,7 @@ export const Route = createFileRoute("/categories")({
 
 function CategoriesPage() {
   const catsQ = useQuery({ queryKey: ["categories"], queryFn: fetchCategories });
-  const prodsQ = useQuery({ queryKey: ["products"], queryFn: fetchProducts });
+  const prodsQ = useQuery({ queryKey: ["products"], queryFn: () => fetchProducts() });
   const imgsQ = useQuery({ queryKey: ["product_images"], queryFn: fetchAllProductImages });
 
   const firstImage = (productId: string) => {
