@@ -37,7 +37,7 @@ function ProductDetail() {
     queryFn: () => fetchProductImages(productQ.data!.id),
     enabled: !!productQ.data?.id,
   });
-  const relatedQ = useQuery({ queryKey: ["products"], queryFn: fetchProducts });
+  const relatedQ = useQuery({ queryKey: ["products"], queryFn: () => fetchProducts() });
 
   const [active, setActive] = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);

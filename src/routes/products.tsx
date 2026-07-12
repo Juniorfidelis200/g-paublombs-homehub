@@ -36,7 +36,7 @@ export const Route = createFileRoute("/products")({
 
 function ProductsPage() {
   const urlSearch = Route.useSearch();
-  const productsQ = useQuery({ queryKey: ["products"], queryFn: fetchProducts });
+  const productsQ = useQuery({ queryKey: ["products"], queryFn: () => fetchProducts() });
   const imagesQ = useQuery({ queryKey: ["product_images"], queryFn: fetchAllProductImages });
 
   const [search, setSearch] = useState("");

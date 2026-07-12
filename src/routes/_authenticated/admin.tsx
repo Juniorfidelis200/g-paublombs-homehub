@@ -5,12 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   fetchProducts,
   fetchAllProductImages,
+  fetchSiteSettings,
+  updateSiteSettings,
   PRODUCT_CATEGORIES,
   STOCK_OPTIONS,
   slugify,
   priceLabel,
   type Product,
   type ProductImage,
+  type SiteSettings,
 } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +24,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, LogOut, Upload, Star, X, Loader2, ImagePlus, ShieldAlert } from "lucide-react";
+import { Plus, Pencil, Trash2, LogOut, Upload, Star, X, Loader2, ImagePlus, ShieldAlert, Eye, EyeOff, Palette } from "lucide-react";
 import logoPrimary from "@/assets/logo-primary.png.asset.json";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -55,12 +58,16 @@ function AdminPage() {
     },
   });
 
-  const productsQ = useQuery({ queryKey: ["products"], queryFn: fetchProducts });
+  const productsQ = useQuery({
+    queryKey: ["products", "admin"],
+    queryFn: () => fetchProducts({ includeUnpublished: true }),
+  });
   const imagesQ = useQuery({ queryKey: ["product_images"], queryFn: fetchAllProductImages });
 
   const [editing, setEditing] = useState<Product | null>(null);
   const [creating, setCreating] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   async function handleSignOut() {
     await qc.cancelQueries();
@@ -105,6 +112,18 @@ function AdminPage() {
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["products"] }),
+  });
+
+  const togglePublished = useMutation({
+    mutationFn: async (p: Product) => {
+      const { error } = await supabase.from("products").update({ published: !p.published }).eq("id", p.id);
+      if (error) throw error;
+    },
+    onSuccess: (_d, p) => {
+      toast.success(p.published ? "Product hidden from site" : "Product published");
+      qc.invalidateQueries({ queryKey: ["products"] });
+    },
+    onError: (e: any) => toast.error(e.message),
   });
 
   const imagesByProduct = useMemo(() => {
@@ -177,6 +196,9 @@ function AdminPage() {
           <Button variant="outline" onClick={() => setBulkOpen(true)} className="border-brand-navy text-brand-navy hover:bg-brand-light">
             <Upload size={16} className="mr-1.5" /> Bulk image upload
           </Button>
+          <Button variant="outline" onClick={() => setSettingsOpen(true)} className="border-brand-navy text-brand-navy hover:bg-brand-light">
+            <Palette size={16} className="mr-1.5" /> Site settings
+          </Button>
         </div>
 
         {productsQ.isLoading ? (
@@ -204,10 +226,14 @@ function AdminPage() {
                       <span className="font-medium text-brand-navy truncate">{p.name}</span>
                       {p.featured && <Badge className="bg-brand-light text-brand-navy border-0">Featured</Badge>}
                       {p.stock_status === "out_of_stock" && <Badge variant="destructive">Out</Badge>}
+                      {!p.published && <Badge variant="outline" className="border-amber-500 text-amber-700">Hidden</Badge>}
                     </div>
                     <div className="text-xs text-muted-foreground mt-0.5">{p.category} · {priceLabel(p)}</div>
                   </div>
                   <div className="flex items-center gap-1">
+                    <Button variant="ghost" size="icon" title={p.published ? "Hide from site" : "Publish to site"} onClick={() => togglePublished.mutate(p)}>
+                      {p.published ? <Eye size={16} /> : <EyeOff size={16} className="text-amber-600" />}
+                    </Button>
                     <Button variant="ghost" size="icon" title={p.featured ? "Unfeature" : "Feature"} onClick={() => toggleFeatured.mutate(p)}>
                       <Star size={16} className={p.featured ? "fill-brand-blue text-brand-blue" : ""} />
                     </Button>
@@ -237,6 +263,95 @@ function AdminPage() {
         />
       )}
       {bulkOpen && <BulkUploadDialog onClose={() => setBulkOpen(false)} />}
+      {settingsOpen && <SiteSettingsDialog onClose={() => setSettingsOpen(false)} />}
+    </div>
+  );
+}
+
+function SiteSettingsDialog({ onClose }: { onClose: () => void }) {
+  const qc = useQueryClient();
+  const settingsQ = useQuery({ queryKey: ["site_settings"], queryFn: fetchSiteSettings });
+  const [form, setForm] = useState<SiteSettings | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (settingsQ.data && !form) setForm(settingsQ.data);
+  }, [settingsQ.data, form]);
+
+  async function handleSave() {
+    if (!form) return;
+    setSaving(true);
+    try {
+      await updateSiteSettings(form.id, {
+        site_name: form.site_name,
+        tagline: form.tagline,
+        brand_navy: form.brand_navy,
+        brand_blue: form.brand_blue,
+        brand_light: form.brand_light,
+      });
+      toast.success("Site settings saved");
+      qc.invalidateQueries({ queryKey: ["site_settings"] });
+      onClose();
+    } catch (e: any) {
+      toast.error(e.message ?? "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="font-display text-2xl text-brand-navy">Site settings</DialogTitle>
+        </DialogHeader>
+        <p className="text-sm text-muted-foreground -mt-2">
+          Customize the site name, tagline and brand colors. Changes appear on the live site immediately.
+        </p>
+        {!form ? (
+          <div className="py-6 text-center text-muted-foreground text-sm">Loading…</div>
+        ) : (
+          <div className="space-y-4 mt-4">
+            <div className="space-y-1.5">
+              <Label>Site name</Label>
+              <Input value={form.site_name} onChange={(e) => setForm({ ...form, site_name: e.target.value })} />
+            </div>
+            <div className="space-y-1.5">
+              <Label>Tagline</Label>
+              <Input value={form.tagline ?? ""} onChange={(e) => setForm({ ...form, tagline: e.target.value })} />
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <ColorField label="Primary (navy)" value={form.brand_navy} onChange={(v) => setForm({ ...form, brand_navy: v })} />
+              <ColorField label="Accent (blue)" value={form.brand_blue} onChange={(v) => setForm({ ...form, brand_blue: v })} />
+              <ColorField label="Soft (light)" value={form.brand_light} onChange={(v) => setForm({ ...form, brand_light: v })} />
+            </div>
+          </div>
+        )}
+        <DialogFooter className="mt-6">
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button className="bg-brand-navy hover:bg-brand-blue text-white" onClick={handleSave} disabled={saving || !form}>
+            {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            Save settings
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-xs">{label}</Label>
+      <div className="flex items-center gap-2">
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-9 w-12 rounded border border-border cursor-pointer bg-transparent"
+        />
+        <Input value={value} onChange={(e) => onChange(e.target.value)} className="font-mono text-xs" />
+      </div>
     </div>
   );
 }
